@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login • AssetTrack</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="brand">
+      <div class="brand-logo">📦</div>
+      <div class="brand-name">AssetTrack</div>
+    </div>
+
+    <h1 class="auth-title">Welcome back</h1>
+    <p class="auth-sub">Sign in to manage your assets</p>
+
+    <div id="loginAlert" class="alert hidden"></div>
+
+    <form id="loginForm" novalidate autocomplete="on">
+      <div class="field">
+        <label for="loginEmail">Email address</label>
+        <input class="input" type="email" id="loginEmail" placeholder="you@example.com"
+               autocomplete="email" required>
+        <span class="error" id="loginEmailErr"></span>
+      </div>
+
+      <div class="field">
+        <div class="label-row">
+          <label for="loginPassword">Password (6 digits)</label>
+          <span class="counter" id="loginPwCount" data-max="6">0/6</span>
+        </div>
+        <div class="pw-wrap">
+          <input class="input" type="password" id="loginPassword" placeholder="••••••"
+                 inputmode="numeric" pattern="[0-9]*" maxlength="6"
+                 autocomplete="current-password" required>
+          <button class="pw-toggle" type="button" data-toggle="loginPassword">SHOW</button>
+        </div>
+        <span class="error" id="loginPasswordErr"></span>
+      </div>
+
+      <button class="btn btn-primary btn-block" type="submit" id="loginBtn">Sign in</button>
+    </form>
+
+    <p class="center small muted" style="margin-top:18px">
+      Don't have an account? <a href="signup.html">Create one</a>
+    </p>
+  </div>
+</div>
+
+<script type="module" src="js/auth.js"></script>
+</body>
+</html>

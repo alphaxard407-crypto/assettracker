@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Dashboard • AssetTrack</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">📦</div>
+      <div class="brand-name">AssetTrack</div>
+    </div>
+    <button class="nav-btn active" data-tab="assets"   data-title="Asset Inventory"><span class="nav-ico">🗂️</span> Assets</button>
+    <button class="nav-btn"        data-tab="clients"  data-title="Registered Clients"><span class="nav-ico">👥</span> Clients</button>
+    <button class="nav-btn"        data-tab="history"  data-title="Assignment History"><span class="nav-ico">🕘</span> History</button>
+    <button class="nav-btn"        data-tab="requests" data-title="Client Requests"><span class="nav-ico">🛠️</span> Requests</button>
+
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar" id="avatar">A</div>
+        <div><div class="nm" id="userName">Loading…</div><div class="rl" id="userRole">admin</div></div>
+      </div>
+      <button class="btn btn-ghost btn-block btn-sm" data-logout>⎋ Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="hamburger" id="menuBtn">☰</button>
+        <div>
+          <h1 id="pageTitle">Asset Inventory</h1>
+          <p class="muted small" style="margin:0">Full control over company assets</p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <button class="btn btn-ghost btn-sm" id="reportBtn">📄 Generate Report</button>
+        <button class="btn btn-ghost btn-sm" id="refreshBtn">↻ Refresh</button>
+        <button class="btn btn-primary btn-sm" id="newAssetBtn">＋ New Asset</button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <section class="stats">
+      <div class="stat b"><div class="lbl">Total assets</div><div class="val" id="sTotal">0</div></div>
+      <div class="stat g"><div class="lbl">Available</div><div class="val" id="sAvailable">0</div></div>
+      <div class="stat"><div class="lbl">Assigned</div><div class="val" id="sAssigned">0</div></div>
+      <div class="stat o"><div class="lbl">Maintenance</div><div class="val" id="sMaint">0</div></div>
+      <div class="stat r"><div class="lbl">Open requests</div><div class="val" id="sReq">0</div></div>
+    </section>
+
+    <!-- ASSETS -->
+    <section data-panel="assets">
+      <div class="card">
+        <div class="card-head">
+          <h2>Inventory</h2>
+          <div class="toolbar">
+            <input class="input" id="searchAsset" placeholder="🔍 Search tag, name, serial…">
+            <select class="input" id="filterStatus">
+              <option value="">All statuses</option>
+              <option value="available">Available</option>
+              <option value="assigned">Assigned</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="retired">Retired</option>
+            </select>
+            <button class="btn btn-ghost btn-sm" id="exportBtn">⬇ CSV</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Tag</th><th>Asset</th><th>Category</th><th>Status</th>
+              <th>Assigned to</th><th>Location</th><th>Value</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="assetRows"></tbody>
+          </table>
+        </div>
+        <div id="assetEmpty" class="empty hidden"><span class="ico">📭</span>No assets match your search.</div>
+      </div>
+    </section>
+
+    <!-- CLIENTS -->
+    <section data-panel="clients" class="hidden">
+      <div class="card">
+        <div class="card-head"><h2>Clients</h2>
+          <input class="input" id="searchClient" placeholder="🔍 Search name or phone…"></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Assets held</th><th>Joined</th></tr></thead>
+            <tbody id="clientRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section data-panel="history" class="hidden">
+      <div class="card">
+        <div class="card-head"><h2>Assignment history</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Asset</th><th>Client</th><th>Assigned</th><th>Due</th><th>Returned</th><th>State</th></tr></thead>
+            <tbody id="historyRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- REQUESTS -->
+    <section data-panel="requests" class="hidden">
+      <div class="card">
+        <div class="card-head"><h2>Client requests</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Asset</th><th>Client</th><th>Type</th><th>Message</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="requestRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ ASSET MODAL ============ -->
+<div class="modal hidden" id="assetModal">
+  <div class="modal-box">
+    <div class="modal-head"><h2 id="assetModalTitle">New Asset</h2>
+      <button class="x" data-close="assetModal">&times;</button></div>
+    <form id="assetForm">
+      <div class="modal-body">
+        <input type="hidden" id="assetId">
+        <div class="row-2">
+          <div class="field"><label for="aTag">Asset tag *</label>
+            <input class="input" id="aTag" placeholder="AST-0007" required></div>
+          <div class="field"><label for="aName">Asset name *</label>
+            <input class="input" id="aName" placeholder="Dell Latitude 5440" required></div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label for="aCategory">Category</label>
+            <select class="input" id="aCategory">
+              <option>Laptop</option><option>Desktop</option><option>Phone</option>
+              <option>Tablet</option><option>Printer</option><option>Projector</option>
+              <option>Network</option><option>Furniture</option><option>Vehicle</option><option>Other</option>
+            </select></div>
+          <div class="field"><label for="aStatus">Status</label>
+            <select class="input" id="aStatus">
+              <option value="available">Available</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="retired">Retired</option>
+            </select></div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label for="aSerial">Serial number</label>
+            <input class="input" id="aSerial"></div>
+          <div class="field"><label for="aLocation">Location</label>
+            <input class="input" id="aLocation" placeholder="Head Office"></div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label for="aDate">Purchase date</label>
+            <input class="input" type="date" id="aDate"></div>
+          <div class="field"><label for="aCost">Purchase cost (KSh)</label>
+            <input class="input" type="number" id="aCost" min="0" step="0.01" value="0"></div>
+        </div>
+        <div class="field"><label for="aNotes">Notes</label>
+          <textarea class="input" id="aNotes" maxlength="400"></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close="assetModal">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveAssetBtn">Save asset</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ ASSIGN MODAL ============ -->
+<div class="modal hidden" id="assignModal">
+  <div class="modal-box" style="max-width:470px">
+    <div class="modal-head"><h2>Assign asset</h2>
+      <button class="x" data-close="assignModal">&times;</button></div>
+    <form id="assignForm">
+      <div class="modal-body">
+        <input type="hidden" id="assignAssetId">
+        <div class="alert alert-info" id="assignAssetInfo"></div>
+        <div class="field"><label for="assignClient">Client *</label>
+          <select class="input" id="assignClient" required></select></div>
+        <div class="field"><label for="assignDue">Expected return date</label>
+          <input class="input" type="date" id="assignDue"></div>
+        <div class="field"><label for="assignNotes">Notes</label>
+          <textarea class="input" id="assignNotes" maxlength="300" placeholder="Condition, accessories…"></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close="assignModal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Assign</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

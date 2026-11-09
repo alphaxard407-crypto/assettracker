@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Assets • AssetTrack</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">📦</div>
+      <div class="brand-name">AssetTrack</div>
+    </div>
+
+    <button class="nav-btn active" data-tab="mine" data-title="My Assets">
+      <span class="nav-ico">💼</span> My Assets
+    </button>
+
+    <button class="nav-btn" data-tab="browse" data-title="Request New Asset">
+      <span class="nav-ico">🛒</span> Request Asset
+    </button>
+
+    <button class="nav-btn" data-tab="history" data-title="My History">
+      <span class="nav-ico">🕘</span> History
+    </button>
+
+    <button class="nav-btn" data-tab="tickets" data-title="My Requests">
+      <span class="nav-ico">🛠️</span> My Requests
+    </button>
+
+    <button class="nav-btn" data-tab="profile" data-title="My Profile">
+      <span class="nav-ico">👤</span> Profile
+    </button>
+
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar" id="avatar">C</div>
+        <div>
+          <div class="nm" id="userName">Loading…</div>
+          <div class="rl" id="userRole">client</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-block btn-sm" data-logout>⎋ Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main">
+
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="hamburger" id="menuBtn">☰</button>
+        <div>
+          <h1 id="pageTitle">My Assets</h1>
+          <p class="muted small" style="margin:0">Equipment currently in your care</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button class="btn btn-primary btn-sm" id="newRequestBtn">＋ New Request</button>
+        <button class="btn btn-ghost btn-sm" id="printMyAssets">🖨️ Print My Assets</button>
+        <button class="btn btn-ghost btn-sm" id="refreshBtn">↻ Refresh</button>
+      </div>
+    </div>
+
+    <!-- ================= STATS ================= -->
+    <section class="stats">
+      <div class="stat">
+        <div class="lbl">Assets held</div>
+        <div class="val" id="sHeld">0</div>
+      </div>
+
+      <div class="stat b">
+        <div class="lbl">Total value</div>
+        <div class="val" id="sValue">KSh 0</div>
+      </div>
+
+      <div class="stat r">
+        <div class="lbl">Overdue</div>
+        <div class="val" id="sOverdue">0</div>
+      </div>
+
+      <div class="stat o">
+        <div class="lbl">Open requests</div>
+        <div class="val" id="sOpen">0</div>
+      </div>
+    </section>
+
+    <!-- ================= MY ASSETS ================= -->
+    <section data-panel="mine">
+      <div class="card">
+        <div class="card-head">
+          <h2>Assigned to me</h2>
+        </div>
+
+        <div class="asset-grid" id="myAssets"></div>
+
+        <div id="mineEmpty" class="empty hidden">
+          <span class="ico">📭</span>
+          No assets assigned to you yet. Browse available assets or contact the administrator.
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BROWSE / REQUEST AVAILABLE ASSETS ================= -->
+    <section data-panel="browse" class="hidden">
+      <div class="card">
+        <div class="card-head">
+          <h2>Available Assets</h2>
+
+          <div class="toolbar">
+            <input class="input" id="searchAvailable" placeholder="🔍 Search available assets…">
+
+            <select class="input" id="filterCategory">
+              <option value="">All categories</option>
+              <option>Laptop</option>
+              <option>Desktop</option>
+              <option>Phone</option>
+              <option>Tablet</option>
+              <option>Printer</option>
+              <option>Projector</option>
+              <option>Network</option>
+              <option>Furniture</option>
+              <option>Vehicle</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <p class="muted small" style="margin-bottom:15px">
+          Browse available assets below. Click <strong>Request This Asset</strong> to send a request to the admin.
+        </p>
+
+        <div class="asset-grid" id="availableAssets"></div>
+
+        <div id="availableEmpty" class="empty hidden">
+          <span class="ico">📦</span>
+          No assets currently available for request.
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HISTORY ================= -->
+    <section data-panel="history" class="hidden">
+      <div class="card">
+        <div class="card-head">
+          <h2>Assignment history</h2>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Asset</th>
+                <th>Tag</th>
+                <th>Assigned</th>
+                <th>Due</th>
+                <th>Returned</th>
+                <th>State</th>
+              </tr>
+            </thead>
+            <tbody id="myHistory"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= REQUESTS ================= -->
+    <section data-panel="tickets" class="hidden">
+      <div class="card">
+        <div class="card-head">
+          <h2>Requests I submitted</h2>
+          <button class="btn btn-primary btn-sm" id="newRequestBtn2">＋ New Request</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Asset</th>
+                <th>Type</th>
+                <th>Message</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="myRequests"></tbody>
+          </table>
+        </div>
+
+        <div id="requestsEmpty" class="empty hidden">
+          <span class="ico">📝</span>
+          No requests yet. Click "New Request" or browse available assets to submit one.
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PROFILE ================= -->
+    <section data-panel="profile" class="hidden">
+      <div class="card" style="max-width:520px">
+        <div class="card-head">
+          <h2>My details</h2>
+        </div>
+
+        <div id="profileAlert" class="alert hidden"></div>
+
+        <form id="profileForm" novalidate>
+          <div class="field">
+            <label for="pName">
+              Full name <span class="muted small">(letters only)</span>
+            </label>
+            <input class="input" id="pName" maxlength="60" required>
+            <span class="error" id="pNameErr"></span>
+          </div>
+
+          <div class="field">
+            <div class="label-row">
+              <label for="pPhone">
+                Phone <span class="muted small">(10 digits)</span>
+              </label>
+              <span class="counter" id="pPhoneCount" data-max="10">0/10</span>
+            </div>
+            <input class="input" id="pPhone" inputmode="numeric" pattern="[0-9]*" maxlength="10" required>
+            <span class="error" id="pPhoneErr"></span>
+          </div>
+
+          <div class="field">
+            <label for="pEmail">Email</label>
+            <input class="input" id="pEmail" disabled>
+            <span class="hint">Email is managed by your login account.</span>
+          </div>
+
+          <button class="btn btn-primary" type="submit" id="saveProfileBtn">
+            Save changes
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ======================================================
+     REQUEST MODAL: REQUEST NEW ASSET / ISSUE / RETURN
+====================================================== -->
+<div class="modal hidden" id="reqModal">
+  <div class="modal-box" style="max-width:500px">
+    <div class="modal-head">
+      <h2 id="reqTitle">Submit a Request</h2>
+      <button class="x" type="button" data-close="reqModal">&times;</button>
+    </div>
+
+    <form id="reqForm">
+      <div class="modal-body">
+
+        <div class="field">
+          <label for="reqTypeSelect">Request Type *</label>
+          <select class="input" id="reqTypeSelect" required>
+            <option value="request">🛒 Request New Asset</option>
+            <option value="issue">🛠️ Report an Issue</option>
+            <option value="return">↩ Request Return</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="reqAssetSelect" id="reqAssetSelectLabel">Select Asset *</label>
+          <select class="input" id="reqAssetSelect" required>
+            <option value="">-- Choose an asset --</option>
+          </select>
+          <span class="error" id="reqAssetSelectErr"></span>
+          <span class="hint" id="reqAssetHint"></span>
+        </div>
+
+        <div class="field">
+          <label for="reqMessage">Message *</label>
+          <textarea class="input" id="reqMessage" maxlength="500" rows="4" required
+            placeholder="Write your request message here…"></textarea>
+          <span class="error" id="reqMessageErr"></span>
+          <span class="hint">Minimum 3 characters.</span>
+        </div>
+
+      </div>
+
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close="reqModal">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="submitReqBtn">Submit Request</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ======================================================
+     REQUEST NEW ASSET MODAL FROM BROWSE CARD
+====================================================== -->
+<div class="modal hidden" id="requestAssetModal">
+  <div class="modal-box" style="max-width:500px">
+    <div class="modal-head">
+      <h2>🛒 Request This Asset</h2>
+      <button class="x" type="button" data-close="requestAssetModal">&times;</button>
+    </div>
+
+    <form id="requestAssetForm">
+      <div class="modal-body">
+
+        <input type="hidden" id="raAssetId">
+
+        <div class="alert alert-info" id="raAssetInfo"></div>
+
+        <div class="field">
+          <label for="raMessage">Why do you need this asset? *</label>
+          <textarea class="input" id="raMessage" maxlength="500" rows="4" required
+            placeholder="Example: I need this laptop for project work, design tasks, field work, etc."></textarea>
+          <span class="error" id="raMessageErr"></span>
+          <span class="hint">Minimum 3 characters. The admin will review your request.</span>
+        </div>
+
+      </div>
+
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close="requestAssetModal">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="submitAssetReqBtn">Submit Request</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="js/client.js"></script>
+</body>
+</html>

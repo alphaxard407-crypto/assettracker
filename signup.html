@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign Up • AssetTrack</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="brand">
+      <div class="brand-logo">📦</div>
+      <div class="brand-name">AssetTrack</div>
+    </div>
+
+    <h1 class="auth-title">Create your account</h1>
+    <p class="auth-sub">Register as a client to view your assigned assets</p>
+
+    <div id="signupAlert" class="alert hidden"></div>
+
+    <form id="signupForm" novalidate>
+      <div class="field">
+        <label for="fullName">Full name <span class="muted small">(letters only)</span></label>
+        <input class="input" type="text" id="fullName" placeholder="John Mensah"
+               maxlength="60" autocomplete="name" required>
+        <span class="error" id="fullNameErr"></span>
+      </div>
+
+      <div class="field">
+        <label for="email">Email address</label>
+        <input class="input" type="email" id="email" placeholder="you@example.com"
+               autocomplete="email" required>
+        <span class="error" id="emailErr"></span>
+      </div>
+
+      <div class="field">
+        <div class="label-row">
+          <label for="phone">Phone number <span class="muted small">(10 digits)</span></label>
+          <span class="counter" id="phoneCount" data-max="10">0/10</span>
+        </div>
+        <input class="input" type="tel" id="phone" placeholder="0241234567"
+               inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="tel" required>
+        <span class="error" id="phoneErr"></span>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <div class="label-row">
+            <label for="password">Password</label>
+            <span class="counter" id="pwCount" data-max="6">0/6</span>
+          </div>
+          <div class="pw-wrap">
+            <input class="input" type="password" id="password" placeholder="••••••"
+                   inputmode="numeric" pattern="[0-9]*" maxlength="6" required>
+            <button class="pw-toggle" type="button" data-toggle="password">SHOW</button>
+          </div>
+          <span class="error" id="passwordErr"></span>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <label for="confirmPassword">Confirm</label>
+            <span class="counter" id="cpwCount" data-max="6">0/6</span>
+          </div>
+          <input class="input" type="password" id="confirmPassword" placeholder="••••••"
+                 inputmode="numeric" pattern="[0-9]*" maxlength="6" required>
+          <span class="error" id="confirmPasswordErr"></span>
+        </div>
+      </div>
+
+      <div class="alert alert-info small">
+        Password must be <strong>exactly 6 numbers</strong> (e.g. 123456). Letters and symbols are blocked.
+      </div>
+
+      <button class="btn btn-primary btn-block" type="submit" id="signupBtn">Create account</button>
+    </form>
+
+    <p class="center small muted" style="margin-top:18px">
+      Already registered? <a href="index.html">Sign in</a>
+    </p>
+  </div>
+</div>
+
+<script type="module" src="js/auth.js"></script>
+</body>
+</html>
